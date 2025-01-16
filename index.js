@@ -1,29 +1,18 @@
-require("dotenv").config();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const Bot = require("./src/bot");
 const { logger } = require("./src/utils/logger");
 
-let botInstance = null;
+const bot = new Bot();
 
-// Обработка необработанных исключений
-process.on("uncaughtException", (error) => {
-  logger.error("Uncaught Exception:", error);
-  if (botInstance) botInstance.stop();
-});
-
-// Обработка необработанных отклонений промисов
-process.on("unhandledRejection", (error) => {
-  logger.error("Unhandled Rejection:", error);
-});
-
-// Создание экземпляра бота
-const startBot = async () => {
-  try {
-    botInstance = new Bot();
-    await botInstance.launch();
-  } catch (error) {
+bot
+  .launch()
+  .then(() => {
+    logger.info("Bot started successfully");
+  })
+  .catch((error) => {
     logger.error("Failed to start bot:", error);
     process.exit(1);
-  }
-};
-
-startBot();
+  });
