@@ -10,6 +10,7 @@ class VideoProcessor {
   }
 
   async processVideo(inputPath, language = "ru") {
+    logger.info(`Starting video processing for: ${inputPath}`);
     try {
       // Анализ трендов
       const trends = await this.trendAnalyzer.analyzeTrends(language);
@@ -42,6 +43,8 @@ class VideoProcessor {
     } catch (error) {
       logger.error("Error processing video:", error);
       throw error;
+    } finally {
+      logger.info(`Video processing completed for: ${inputPath}`);
     }
   }
 

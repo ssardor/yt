@@ -11,6 +11,7 @@ class TrendAnalyzer {
   }
 
   async analyzeTrends(language = "ru") {
+    logger.info(`Analyzing trends for language: ${language}`);
     try {
       const regions = this.regions[language].split(",");
       let allTrends = [];
@@ -41,6 +42,8 @@ class TrendAnalyzer {
     } catch (error) {
       logger.error("Error in trend analysis:", error);
       return this.getDefaultTrends(language);
+    } finally {
+      logger.info(`Trends analysis completed for language: ${language}`);
     }
   }
 
