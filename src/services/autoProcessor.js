@@ -28,24 +28,26 @@ class AutoProcessor {
       for (const lang of languages) {
         logger.info(`Starting trend analysis for ${lang}`);
         const trends = await this.trendAnalyzer.analyzeTrends(lang);
+        logger.info(
+          `Trends analyzed for ${lang}: ${trends.trendingVideos.length} videos found.`
+        );
 
-        // Проверка наличия видео
         if (!trends.trendingVideos || trends.trendingVideos.length === 0) {
           logger.warn(`No trending videos found for ${lang}`);
-          continue; // Пропустить итерацию, если нет видео
+          continue;
         }
 
-        // Обрабатываем топ-10 видео
         for (const video of trends.trendingVideos.slice(0, 10)) {
-          // Проверка, было ли видео уже обработано
           if (this.processedVideos.has(video.url)) {
             logger.info(`Video already processed: ${video.url}`);
-            continue; // Пропустить, если видео уже обработано
+            continue;
           }
 
           try {
+            logger.info(`Processing video: ${video.url}`);
             await this.processVideo(video, lang);
             this.processedVideos.add(video.url);
+            logger.info(`Successfully processed video: ${video.url}`);
           } catch (error) {
             logger.error(
               `Error processing video ${video.url}: ${error.message}`
